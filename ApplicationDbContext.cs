@@ -12,12 +12,11 @@ namespace NuitInfo2022
         {
         }
 
-        public DbSet<Zob> Zob { get; set; }
+        public DbSet<User> User;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Zob>().ToTable("Zob");
-
+            modelBuilder.Entity<User>().ToTable("User");
             base.OnModelCreating(modelBuilder);
         }
     }
