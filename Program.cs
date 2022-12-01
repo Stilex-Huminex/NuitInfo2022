@@ -10,7 +10,7 @@ internal class Program
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
-        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=COUCOU;Trusted_Connection=True;MultipleActiveResultSets=true"));
+        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=LOCAL;Trusted_Connection=True;MultipleActiveResultSets=true"));
 
         var app = builder.Build();
 
