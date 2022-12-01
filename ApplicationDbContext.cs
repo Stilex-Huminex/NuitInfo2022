@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using NuitInfo2022.Models;
 
 namespace NuitInfo2022
 {
@@ -10,8 +12,11 @@ namespace NuitInfo2022
         {
         }
 
+        public DbSet<Zob> Zob { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Zob>().ToTable("Zob");
 
             base.OnModelCreating(modelBuilder);
         }
