@@ -22,18 +22,18 @@ namespace NuitInfo2022.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-              return View(await _context.User_1.ToListAsync());
+              return View(await _context.User.ToListAsync());
         }
 
         // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.User_1 == null)
+            if (id == null || _context.User == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.User_1
+            var user = await _context.User
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
@@ -66,14 +66,14 @@ namespace NuitInfo2022.Controllers
         }
 
         // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.User_1 == null)
+            if (id == null || _context.User == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.User_1.FindAsync(id);
+            var user = await _context.User.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace NuitInfo2022.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Password,IsAdmin")] User user)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Email,Password,IsAdmin")] User user)
         {
             if (id != user.Id)
             {
@@ -117,14 +117,14 @@ namespace NuitInfo2022.Controllers
         }
 
         // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.User_1 == null)
+            if (id == null || _context.User == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.User_1
+            var user = await _context.User
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
@@ -137,25 +137,25 @@ namespace NuitInfo2022.Controllers
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.User_1 == null)
+            if (_context.User == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.User_1'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.User'  is null.");
             }
-            var user = await _context.User_1.FindAsync(id);
+            var user = await _context.User.FindAsync(id);
             if (user != null)
             {
-                _context.User_1.Remove(user);
+                _context.User.Remove(user);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(int id)
+        private bool UserExists(Guid id)
         {
-          return _context.User_1.Any(e => e.Id == id);
+          return _context.User.Any(e => e.Id == id);
         }
     }
 }

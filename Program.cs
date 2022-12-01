@@ -5,6 +5,7 @@ using NuitInfo2022;
 using System.IO;
 using System.Net.Sockets;
 
+#nullable disable
 internal class Program
 {
     private static void Main(string[] args)

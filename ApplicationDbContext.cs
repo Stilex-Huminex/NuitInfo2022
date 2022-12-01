@@ -12,8 +12,7 @@ namespace NuitInfo2022
         {
         }
 
-        public DbSet<User> User;
-
+        public DbSet<User> User { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().ToTable("User");
