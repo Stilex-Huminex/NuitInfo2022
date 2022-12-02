@@ -26,10 +26,20 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        
+                        @if (sessionvalue == null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ApplicationUser" asp-action="Connexion">Connexion</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ApplicationUser" asp-action="Deconnexion">Déconnexion</a>
+                            </li>
+                        }
                         <li class="nav-item">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ApplicationUser" asp-action="Connexion">Connexion</a>
-                        </li>
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">À Propos</a>
                         </li>
                         <li class="nav-item">
@@ -50,8 +60,9 @@
                        
                     
                     </ul>
+
                      <div class="UserName">
-                            @sessionvalue
+                        <a class="nav-link text-dark" asp-area="" asp-controller="ApplicationUser" asp-action="Information">@sessionvalue</a>
                      <div/>
                 </div>
             </div>
