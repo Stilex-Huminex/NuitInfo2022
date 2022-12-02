@@ -71,6 +71,7 @@ internal class Program
                 context.Context.Response.Headers["content-type"] = context.Context.Request.Path.HasValue && context.Context.Request.Path.Value.EndsWith(".data.gz") ? "application/octet" : context.Context.Response.Headers["content-type"];
             }
         });
+
         
         app.UseDirectoryBrowser(new DirectoryBrowserOptions
         {
