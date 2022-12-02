@@ -58,10 +58,17 @@ internal class Program
             RedirectToAppendTrailingSlash = true,
             OnPrepareResponse = (context) =>
             {
+                // br Encoding
                 context.Context.Response.Headers["content-encoding"] = context.Context.Request.Path.HasValue && context.Context.Request.Path.Value.EndsWith(".br") ? "br" : context.Context.Response.Headers["content-encoding"];
                 context.Context.Response.Headers["content-type"] = context.Context.Request.Path.HasValue && context.Context.Request.Path.Value.EndsWith(".wasm.br") ? "application/wasm" : context.Context.Response.Headers["content-type"];
                 context.Context.Response.Headers["content-type"] = context.Context.Request.Path.HasValue && context.Context.Request.Path.Value.EndsWith(".js.br") ? "application/javascript" : context.Context.Response.Headers["content-type"];
                 context.Context.Response.Headers["content-type"] = context.Context.Request.Path.HasValue && context.Context.Request.Path.Value.EndsWith(".data.br") ? "application/octet" : context.Context.Response.Headers["content-type"];
+
+                // gz Encoding
+                context.Context.Response.Headers["content-encoding"] = context.Context.Request.Path.HasValue && context.Context.Request.Path.Value.EndsWith(".gz") ? "gzip" : context.Context.Response.Headers["content-encoding"];
+                context.Context.Response.Headers["content-type"] = context.Context.Request.Path.HasValue && context.Context.Request.Path.Value.EndsWith(".wasm.gz") ? "application/wasm" : context.Context.Response.Headers["content-type"];
+                context.Context.Response.Headers["content-type"] = context.Context.Request.Path.HasValue && context.Context.Request.Path.Value.EndsWith(".js.gz") ? "application/javascript" : context.Context.Response.Headers["content-type"];
+                context.Context.Response.Headers["content-type"] = context.Context.Request.Path.HasValue && context.Context.Request.Path.Value.EndsWith(".data.gz") ? "application/octet" : context.Context.Response.Headers["content-type"];
             }
         });
         
