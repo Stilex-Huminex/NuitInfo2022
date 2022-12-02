@@ -17,7 +17,7 @@ namespace NuitInfo2022.Controllers
         // GET: UserMessageController
         public ActionResult Index()
         {
-            return View(_context.UserMessages.Include(um => um.User).ToArray());
+            return View(_context.UserMessages.Include(um => um.User).OrderByDescending(um => um.CreatedAt).ToArray());
         }
 
         // GET: UserMessageController/Create
