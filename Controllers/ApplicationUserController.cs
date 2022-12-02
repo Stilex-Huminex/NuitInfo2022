@@ -20,48 +20,105 @@ namespace NuitInfo2022.Controllers
         public ApplicationUserController(ILogger<RootController> logger, ApplicationDbContext context) : base(logger, context)
         {
         }
-        // GET: Users
+        // GET: ApplicationUser
         public async Task<IActionResult> Index()
         {
-              return View(await _context.ApplicationUsers.ToListAsync());
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
+            return View(await _context.ApplicationUsers.ToListAsync());
         }
 
-        // GET: Users/Connexion
+        // GET: ApplicationUser/Connexion
         public IActionResult Connexion()
         {
             return View();
         }
-        // GET: Users/Connexion
+        // GET: ApplicationUser/Connexion
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Connexion(string email, string password)
         {
+
             var user = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == email);
             if(user == null)
             {
-                return NotFound();
+                @ViewBag.Invalid_Email = "Email incorrecte";
+                return View("Connexion");
             }
             if(user.Password == HashPassword(password))
             {
                 HttpContext.Session.SetString("UserId", user.Id.ToString());
-                return Connected();
+                HttpContext.Session.SetString("UserName", user.Name.ToString());
+                HttpContext.Session.SetString("IsAdmin", user.IsAdmin.ToString());
+                ViewBag.Name = user.Name; ViewBag.Email = user.Email;
+                return View("Connected");
 
             }
             else
             {
-                return NotFound();
+                @ViewBag.Invalid_Password = "Mot de passe Invalide";
+                return View("Connexion");
             }
             
         }
 
-        // GET: Users/Connexion
+        // GET: ApplicationUser/Connected
         public IActionResult Connected()
+        {
+            
+            return View();
+        }
+
+        // GET: ApplicationUser/Connected
+        public IActionResult Inscrit()
+        {
+            
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Inscription([Bind("Id,Name,Email,Password,IsAdmin")] ApplicationUser user )
+        {
+            
+            var test = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == user.Email);
+            if(test != null)
+            {
+                ViewBag.Invalid_Email = user.Email + " est déja inscrit";
+                return View("Inscription");
+            }
+            user.Password = HashPassword(user.Password);
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(user);
+                await _context.SaveChangesAsync();
+                
+                return View("Inscrit");
+            }
+           
+            return View("Inscription");
+
+
+        }
+        // GET: ApplicationUser/Inscription
+        public IActionResult Inscription()
         {
             return View();
         }
 
 
-        // GET: Users/Details/5
+
+        // GET: ApplicationUser/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
+
             if (id == null || _context.ApplicationUsers == null)
             {
                 return NotFound();
@@ -77,20 +134,33 @@ namespace NuitInfo2022.Controllers
             return View(user);
         }
 
-        // GET: Users/Create
+        // GET: ApplicationUser/Create
         public IActionResult Create()
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
             return View();
         }
 
-      
-        // POST: Users/Create
+
+        // POST: ApplicationUser/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Email,Password,IsAdmin")] ApplicationUser user)
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
+            var test = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == user.Email);
+            if (test != null)
+            {
+                return View("Inscription");
+            }
             user.Password = HashPassword(user.Password);
 
             if (ModelState.IsValid)
@@ -109,7 +179,7 @@ namespace NuitInfo2022.Controllers
 
             // Generate a 128-bit salt using a sequence of
             // cryptographically strong random bytes.
-            byte[] salt = RandomNumberGenerator.GetBytes(128 / 8); // divide by 8 to convert bits to bytes
+            byte[] salt = {0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1}; // divide by 8 to convert bits to bytes
             Console.WriteLine($"Salt: {Convert.ToBase64String(salt)}");
 
             // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
@@ -122,9 +192,13 @@ namespace NuitInfo2022.Controllers
             return hashed;
         }
 
-        // GET: Users/Edit/5
+        // GET: ApplicationUser/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
             if (id == null || _context.ApplicationUsers == null)
             {
                 return NotFound();
@@ -138,17 +212,22 @@ namespace NuitInfo2022.Controllers
             return View(user);
         }
 
-        // POST: Users/Edit/5
+        // POST: ApplicationUser/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Email,Password,IsAdmin")] ApplicationUser user)
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
             if (id != user.Id)
             {
                 return NotFound();
             }
+         
 
             if (ModelState.IsValid)
             {
@@ -173,9 +252,13 @@ namespace NuitInfo2022.Controllers
             return View(user);
         }
 
-        // GET: Users/Delete/5
+        // GET: ApplicationUser/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
             if (id == null || _context.ApplicationUsers == null)
             {
                 return NotFound();
@@ -191,11 +274,15 @@ namespace NuitInfo2022.Controllers
             return View(user);
         }
 
-        // POST: Users/Delete/5
+        // POST: ApplicationUser/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
             if (_context.ApplicationUsers == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.User'  is null.");

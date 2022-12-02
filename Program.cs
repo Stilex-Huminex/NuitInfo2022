@@ -25,7 +25,11 @@ internal class Program
             sqlServerOptionsAction: option => option.EnableRetryOnFailure()
         ));
 
+        builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        builder.Services.AddSession();
+
         var app = builder.Build();
+        
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
@@ -60,7 +64,7 @@ internal class Program
                 context.Context.Response.Headers["content-type"] = context.Context.Request.Path.HasValue && context.Context.Request.Path.Value.EndsWith(".data.br") ? "application/octet" : context.Context.Response.Headers["content-type"];
             }
         });
-
+        
         app.UseDirectoryBrowser(new DirectoryBrowserOptions
         {
             FileProvider = fileProvider,
@@ -74,10 +78,15 @@ internal class Program
 
         app.UseAuthorization();
 
+        app.UseSession();
+
+
+    
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
         app.Run();
+        
     }
 }
