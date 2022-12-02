@@ -227,7 +227,7 @@ namespace NuitInfo2022.Controllers
             {
                 return NotFound();
             }
-         
+            user.Password = HashPassword(user.Password);
 
             if (ModelState.IsValid)
             {
