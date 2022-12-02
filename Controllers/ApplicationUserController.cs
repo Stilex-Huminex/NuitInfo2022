@@ -97,7 +97,13 @@ namespace NuitInfo2022.Controllers
                 ViewBag.Invalid_Email = "Email Invalide";
                 return View("Inscription");
             }
-
+            //string pattern = @"^(?=.*[AZ].*[AZ])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[az].*[az].*[az]).{.8}";
+            //Match match = Regex.Match(user.Password,pattern );
+            if (user.Password.Length < 8)
+            {
+                ViewBag.Invalid_Password = "size > 8, Majuscule >= 1, Number >= 1, Special caracter >= 1";
+                return View("Inscription");
+            }
             user.Password = HashPassword(user.Password);
             if (ModelState.IsValid)
             {
