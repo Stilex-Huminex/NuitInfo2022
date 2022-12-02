@@ -39,17 +39,20 @@ namespace NuitInfo2022.Controllers
             var user = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == email);
             if(user == null)
             {
-                return NotFound();
+                @ViewBag.Invalid_Email = "Email incorrecte";
+                return View("Connexion");
             }
             if(user.Password == HashPassword(password))
             {
                 HttpContext.Session.SetString("UserId", user.Id.ToString());
+                ViewBag.Name = user.Name; ViewBag.Email = user.Email;
                 return View("Connected");
 
             }
             else
             {
-                return Connexion();
+                @ViewBag.Invalid_Password = "Mot de passe Invalide";
+                return View("Connexion");
             }
             
         }
@@ -57,6 +60,14 @@ namespace NuitInfo2022.Controllers
         // GET: ApplicationUser/Connected
         public IActionResult Connected()
         {
+            
+            return View();
+        }
+
+        // GET: ApplicationUser/Connected
+        public IActionResult Inscrit()
+        {
+            
             return View();
         }
 
@@ -64,15 +75,25 @@ namespace NuitInfo2022.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Inscription([Bind("Id,Name,Email,Password,IsAdmin")] ApplicationUser user )
         {
+
+            var test = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == user.Email);
+            if(test != null)
+            {
+                ViewBag.Invalid_Email = user.Email + " est déja inscrit";
+                return View("Inscription");
+            }
             user.Password = HashPassword(user.Password);
 
             if (ModelState.IsValid)
             {
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewBag.Name = user.Name; ViewBag.Email = user.Email;
+                return View("Inscrit");
             }
-            return View("Connected");
+           
+            return View("Inscription");
+
 
         }
         // GET: ApplicationUser/Inscription
@@ -115,6 +136,11 @@ namespace NuitInfo2022.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Email,Password,IsAdmin")] ApplicationUser user)
         {
+            var test = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == user.Email);
+            if (test != null)
+            {
+                return View("Inscription");
+            }
             user.Password = HashPassword(user.Password);
 
             if (ModelState.IsValid)
