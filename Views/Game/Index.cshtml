@@ -3,7 +3,6 @@
     <link rel="stylesheet" href="GameData/TemplateData/style.css">
 }
 
-
 <div id="unity-container" class="unity-desktop">
     <canvas id="unity-canvas" width=960 height=600></canvas>
     <div id="unity-loading-bar">
@@ -16,7 +15,7 @@
     <div id="unity-footer">
         <div id="unity-webgl-logo"></div>
         <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">Flappy Bloon 3D</div>
+        <div id="unity-build-title">TestNDIWebGl</div>
     </div>
 </div>
 <script>
@@ -34,34 +33,34 @@
     // way that non-critical warnings and error messages are presented to the
     // user.
     function unityShowBanner(msg, type) {
-      function updateBannerVisibility() {
-        warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-      }
-      var div = document.createElement('div');
-      div.innerHTML = msg;
-      warningBanner.appendChild(div);
-      if (type == 'error') div.style = 'background: red; padding: 10px;';
-      else {
-        if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-        setTimeout(function() {
-          warningBanner.removeChild(div);
-          updateBannerVisibility();
-        }, 5000);
-      }
-      updateBannerVisibility();
+        function updateBannerVisibility() {
+            warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+            if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+            setTimeout(function () {
+                warningBanner.removeChild(div);
+                updateBannerVisibility();
+            }, 5000);
+        }
+        updateBannerVisibility();
     }
 
     var buildUrl = "GameData/Build";
-    var loaderUrl = buildUrl + "/Test.loader.js";
+    var loaderUrl = buildUrl + "/Games.loader.js";
     var config = {
-      dataUrl: buildUrl + "/Test.data.gz",
-        frameworkUrl: buildUrl + "/Test.framework.js.gz",
-        codeUrl: buildUrl + "/Test.wasm.gz",
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "Stilex Huminex",
-      productName: "Flappy Bloon 3D",
-      productVersion: "0.1.0",
-      showBanner: unityShowBanner,
+        dataUrl: buildUrl + "/Games.data.gz",
+        frameworkUrl: buildUrl + "/Games.framework.js.gz",
+        codeUrl: buildUrl + "/Games.wasm.gz",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "TestNDIWebGl",
+        productVersion: "0.1",
+        showBanner: unityShowBanner,
     };
 
     // By default Unity keeps WebGL canvas render target size matched with
@@ -72,25 +71,25 @@
     // config.matchWebGLToCanvasSize = false;
 
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-      // Mobile device style: fill the whole browser client area with the game canvas:
+        // Mobile device style: fill the whole browser client area with the game canvas:
 
-      var meta = document.createElement('meta');
-      meta.name = 'viewport';
-      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-      document.getElementsByTagName('head')[0].appendChild(meta);
-      container.className = "unity-mobile";
-      canvas.className = "unity-mobile";
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        container.className = "unity-mobile";
+        canvas.className = "unity-mobile";
 
-      // To lower canvas resolution on mobile devices to gain some
-      // performance, uncomment the following line:
-      // config.devicePixelRatio = 1;
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+        // config.devicePixelRatio = 1;
 
-      unityShowBanner('WebGL builds are not supported on mobile devices.');
+        unityShowBanner('WebGL builds are not supported on mobile devices.');
     } else {
-      // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
-      canvas.style.width = "960px";
-      canvas.style.height = "600px";
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
     }
 
     loadingBar.style.display = "block";
@@ -98,16 +97,16 @@
     var script = document.createElement("script");
     script.src = loaderUrl;
     script.onload = () => {
-      createUnityInstance(canvas, config, (progress) => {
-        progressBarFull.style.width = 100 * progress + "%";
-      }).then((unityInstance) => {
-        loadingBar.style.display = "none";
-        fullscreenButton.onclick = () => {
-          unityInstance.SetFullscreen(1);
-        };
-      }).catch((message) => {
-        alert(message);
-      });
+        createUnityInstance(canvas, config, (progress) => {
+            progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+            loadingBar.style.display = "none";
+            fullscreenButton.onclick = () => {
+                unityInstance.SetFullscreen(1);
+            };
+        }).catch((message) => {
+            alert(message);
+        });
     };
     document.body.appendChild(script);
 </script>
