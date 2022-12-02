@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using NuitInfo2022;
 using NuitInfo2022.Controllers.Shared;
 using NuitInfo2022.Models;
 using NuitInfo2022.Models.Entities;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace NuitInfo2022.Controllers
 {
@@ -18,12 +20,44 @@ namespace NuitInfo2022.Controllers
         public ApplicationUserController(ILogger<RootController> logger, ApplicationDbContext context) : base(logger, context)
         {
         }
-
         // GET: Users
         public async Task<IActionResult> Index()
         {
               return View(await _context.ApplicationUsers.ToListAsync());
         }
+
+        // GET: Users/Connexion
+        public IActionResult Connexion()
+        {
+            return View();
+        }
+        // GET: Users/Connexion
+        public async Task<IActionResult> Connexion(string email, string password)
+        {
+            var user = await _context.User.FirstOrDefaultAsync(m => m.Email == email);
+            if(user == null)
+            {
+                return NotFound();
+            }
+            if(user.Password == HashPassword(password))
+            {
+                HttpContext.Session.SetString("UserId", user.Id.ToString());
+                return Connected();
+
+            }
+            else
+            {
+                return NotFound();
+            }
+            
+        }
+
+        // GET: Users/Connexion
+        public IActionResult Connected()
+        {
+            return View();
+        }
+
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(Guid? id)
@@ -49,6 +83,7 @@ namespace NuitInfo2022.Controllers
             return View();
         }
 
+      
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -56,6 +91,8 @@ namespace NuitInfo2022.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Email,Password,IsAdmin")] ApplicationUser user)
         {
+            user.Password = HashPassword(user.Password);
+
             if (ModelState.IsValid)
             {
                 _context.Add(user);
@@ -63,6 +100,26 @@ namespace NuitInfo2022.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
+        }
+
+        public static string HashPassword(string password)
+        {
+            if (password == null) throw new ArgumentNullException("password");
+
+
+            // Generate a 128-bit salt using a sequence of
+            // cryptographically strong random bytes.
+            byte[] salt = RandomNumberGenerator.GetBytes(128 / 8); // divide by 8 to convert bits to bytes
+            Console.WriteLine($"Salt: {Convert.ToBase64String(salt)}");
+
+            // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password!,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+            return hashed;
         }
 
         // GET: Users/Edit/5
