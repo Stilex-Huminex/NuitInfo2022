@@ -20,18 +20,18 @@ namespace NuitInfo2022.Controllers
         public ApplicationUserController(ILogger<RootController> logger, ApplicationDbContext context) : base(logger, context)
         {
         }
-        // GET: Users
+        // GET: ApplicationUser
         public async Task<IActionResult> Index()
         {
               return View(await _context.ApplicationUsers.ToListAsync());
         }
 
-        // GET: Users/Connexion
+        // GET: ApplicationUser/Connexion
         public IActionResult Connexion()
         {
             return View();
         }
-        // GET: Users/Connexion
+        // GET: ApplicationUser/Connexion
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Connexion(string email, string password)
@@ -54,7 +54,7 @@ namespace NuitInfo2022.Controllers
             
         }
 
-        // GET: Users/Connected
+        // GET: ApplicationUser/Connected
         public IActionResult Connected()
         {
             return View();
@@ -62,7 +62,7 @@ namespace NuitInfo2022.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Inscription([Bind("Id,Name,Email,Password,IsAdmin")] User user)
+        public async Task<IActionResult> Inscription([Bind("Id,Name,Email,Password,IsAdmin")] ApplicationUser user )
         {
             user.Password = HashPassword(user.Password);
 
@@ -75,7 +75,7 @@ namespace NuitInfo2022.Controllers
             return View("Connected");
 
         }
-        // GET: Users/Inscription
+        // GET: ApplicationUser/Inscription
         public IActionResult Inscription()
         {
             return View();
@@ -83,7 +83,7 @@ namespace NuitInfo2022.Controllers
 
 
 
-        // GET: Users/Details/5
+        // GET: ApplicationUser/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _context.ApplicationUsers == null)
@@ -101,14 +101,14 @@ namespace NuitInfo2022.Controllers
             return View(user);
         }
 
-        // GET: Users/Create
+        // GET: ApplicationUser/Create
         public IActionResult Create()
         {
             return View();
         }
 
-      
-        // POST: Users/Create
+
+        // POST: ApplicationUser/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -146,7 +146,7 @@ namespace NuitInfo2022.Controllers
             return hashed;
         }
 
-        // GET: Users/Edit/5
+        // GET: ApplicationUser/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null || _context.ApplicationUsers == null)
@@ -162,7 +162,7 @@ namespace NuitInfo2022.Controllers
             return View(user);
         }
 
-        // POST: Users/Edit/5
+        // POST: ApplicationUser/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -197,7 +197,7 @@ namespace NuitInfo2022.Controllers
             return View(user);
         }
 
-        // GET: Users/Delete/5
+        // GET: ApplicationUser/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _context.ApplicationUsers == null)
@@ -215,7 +215,7 @@ namespace NuitInfo2022.Controllers
             return View(user);
         }
 
-        // POST: Users/Delete/5
+        // POST: ApplicationUser/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
