@@ -36,6 +36,10 @@ namespace NuitInfo2022.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Connexion(string email, string password)
         {
+            ViewBag.Invalid_Email = null;
+            ViewBag.Name = null;
+            ViewBag.Email = null;
+            ViewBag.Invalid_Password = null;
             var user = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == email);
             if(user == null)
             {
@@ -75,7 +79,7 @@ namespace NuitInfo2022.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Inscription([Bind("Id,Name,Email,Password,IsAdmin")] ApplicationUser user )
         {
-
+            ViewBag.Invalid_Email = null;
             var test = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == user.Email);
             if(test != null)
             {
@@ -88,7 +92,7 @@ namespace NuitInfo2022.Controllers
             {
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                ViewBag.Name = user.Name; ViewBag.Email = user.Email;
+                
                 return View("Inscrit");
             }
            
