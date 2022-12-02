@@ -40,10 +40,7 @@ namespace NuitInfo2022.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Connexion(string email, string password)
         {
-            ViewBag.Invalid_Email = null;
-            ViewBag.Name = null;
-            ViewBag.Email = null;
-            ViewBag.Invalid_Password = null;
+
             var user = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == email);
             if(user == null)
             {
@@ -53,6 +50,7 @@ namespace NuitInfo2022.Controllers
             if(user.Password == HashPassword(password))
             {
                 HttpContext.Session.SetString("UserId", user.Id.ToString());
+                HttpContext.Session.SetString("UserName", user.Name.ToString());
                 HttpContext.Session.SetString("IsAdmin", user.IsAdmin.ToString());
                 ViewBag.Name = user.Name; ViewBag.Email = user.Email;
                 return View("Connected");
@@ -84,7 +82,7 @@ namespace NuitInfo2022.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Inscription([Bind("Id,Name,Email,Password,IsAdmin")] ApplicationUser user )
         {
-            ViewBag.Invalid_Email = null;
+            
             var test = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == user.Email);
             if(test != null)
             {
@@ -229,21 +227,7 @@ namespace NuitInfo2022.Controllers
             {
                 return NotFound();
             }
-            var test = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == user.Email);
-            
-            if(user.Password == null)
-            {
-                user.Password = test.Password;
-            }
-            if(user.Name == null)
-            {
-                user.Password = test.Name;
-            }
-            if (user.Email == null)
-            {
-                user.Password = test.Email;
-            }
-            user.Password = HashPassword(user.Password);
+         
 
             if (ModelState.IsValid)
             {

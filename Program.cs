@@ -25,6 +25,7 @@ internal class Program
             sqlServerOptionsAction: option => option.EnableRetryOnFailure()
         ));
 
+        builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         builder.Services.AddSession();
 
         var app = builder.Build();
