@@ -34,7 +34,7 @@ namespace NuitInfo2022.Controllers
         // GET: Users/Connexion
         public async Task<IActionResult> Connexion(string email, string password)
         {
-            var user = await _context.User.FirstOrDefaultAsync(m => m.Email == email);
+            var user = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == email);
             if(user == null)
             {
                 return NotFound();
