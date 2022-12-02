@@ -12,6 +12,8 @@ using NuitInfo2022.Controllers.Shared;
 using NuitInfo2022.Models;
 using NuitInfo2022.Models.Entities;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace NuitInfo2022.Controllers
 {
@@ -89,8 +91,18 @@ namespace NuitInfo2022.Controllers
                 ViewBag.Invalid_Email = user.Email + " est déja inscrit";
                 return View("Inscription");
             }
+            if(! new EmailAddressAttribute().IsValid(user.Email))
+            {
+                ViewBag.Invalid_Email = "Email Invalide";
+                return View("Inscription");
+            }
+            Match match = Regex.Match(user.Password, "^(?=.*?[A - Z])(?=.*?[a - z])(?=.*?[0 - 9])(?=.*?[#?!@$ %^&*-]).{8,}$", RegexOptions.IgnoreCase);
+            if (!match.Success)
+            {
+                ViewBag.Invalid_Password = "size > 8, Majuscule >= 1, Number >= 1, Special caracter >= 1";
+                return View("Inscription");
+            }
             user.Password = HashPassword(user.Password);
-
             if (ModelState.IsValid)
             {
                 _context.Add(user);
@@ -227,7 +239,7 @@ namespace NuitInfo2022.Controllers
             {
                 return NotFound();
             }
-         
+            user.Password = HashPassword(user.Password);
 
             if (ModelState.IsValid)
             {
