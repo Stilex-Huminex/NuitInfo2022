@@ -169,3 +169,38 @@ a:hover{
         opacity: 0;
     }
 }
+
+.oneText{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.sender {
+    text-anchor:middle;
+    background-color: #2541ae;
+    height:50px;
+    padding:20px;
+    color: white;
+    margin: 10px;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    text-align: center;
+    flex-shrink: 0;
+    border: 2px solid black;
+    border-radius: 1000px;
+    max-width:  15vw;
+    overflow:hidden;
+}
+
+.message {
+    padding: 10px;
+    flex-grow: 1;
+    border: 2px solid black;
+    border-radius: 10px;
+    margin: auto;
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

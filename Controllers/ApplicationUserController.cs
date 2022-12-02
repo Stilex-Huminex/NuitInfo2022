@@ -123,11 +123,9 @@ namespace NuitInfo2022.Controllers
         }
 
         // GET: ApplicationUser/Information
-        public async Task<IActionResult> Information()
+        public IActionResult Information()
         {
-            var UserId = HttpContext.Session.GetString("UserId");
-            var user = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Id.ToString() == UserId);
-            return View(user);
+            return View(GetCurrentUser());
         }
 
         public IActionResult Deconnexion()
