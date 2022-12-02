@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using NuitInfo2022.Controllers.Shared;
+using NuitInfo2022.Models.Entities;
 
 namespace NuitInfo2022.Controllers
 {
-    public class GameController : Controller
+    public class GameController : RootController
     {
-        private readonly ILogger<GameController> _logger;
-        private ApplicationDbContext _context;
-
-        public GameController(ILogger<GameController> logger, ApplicationDbContext context)
+        public GameController(ILogger<RootController> logger, ApplicationDbContext context) : base(logger, context)
         {
-            _logger = logger;
-            _context = context;
         }
+
         public IActionResult Index()
         {
             return View();

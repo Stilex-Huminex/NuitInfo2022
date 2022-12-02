@@ -1,16 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using NuitInfo2022.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using NuitInfo2022.Controllers.Shared;
+using NuitInfo2022.Models.Entities;
 using System.Diagnostics;
 
 namespace NuitInfo2022.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : RootController
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<RootController> logger, ApplicationDbContext context) : base(logger, context)
         {
-            _logger = logger;
         }
 
         public IActionResult Index()
@@ -21,12 +20,6 @@ namespace NuitInfo2022.Controllers
         public IActionResult Privacy()
         {
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
