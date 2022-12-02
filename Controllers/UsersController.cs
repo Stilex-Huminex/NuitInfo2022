@@ -32,31 +32,55 @@ namespace NuitInfo2022.Controllers
             return View();
         }
         // GET: Users/Connexion
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Connexion(string email, string password)
         {
             var user = await _context.User.FirstOrDefaultAsync(m => m.Email == email);
-            if(user == null)
+            if(user == null || email == null || password == null)
             {
                 return NotFound();
             }
             if(user.Password == HashPassword(password))
             {
                 HttpContext.Session.SetString("UserId", user.Id.ToString());
-                return Connected();
+                return View("Connected");
 
             }
             else
             {
-                return NotFound();
+                return Connexion();
             }
             
         }
 
-        // GET: Users/Connexion
+        // GET: Users/Connected
         public IActionResult Connected()
         {
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Inscription([Bind("Id,Name,Email,Password,IsAdmin")] User user)
+        {
+            user.Password = HashPassword(user.Password);
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View("Connected");
+
+        }
+        // GET: Users/Inscription
+        public IActionResult Inscription()
+        {
+            return View();
+        }
+
 
 
         // GET: Users/Details/5
@@ -109,7 +133,7 @@ namespace NuitInfo2022.Controllers
 
             // Generate a 128-bit salt using a sequence of
             // cryptographically strong random bytes.
-            byte[] salt = RandomNumberGenerator.GetBytes(128 / 8); // divide by 8 to convert bits to bytes
+            byte[] salt = {0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1}; // divide by 8 to convert bits to bytes
             Console.WriteLine($"Salt: {Convert.ToBase64String(salt)}");
 
             // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)

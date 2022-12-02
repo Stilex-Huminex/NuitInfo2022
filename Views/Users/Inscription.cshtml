@@ -1,17 +1,22 @@
 ﻿@model NuitInfo2022.Models.User
 
 @{
-    ViewData["Title"] = "Connexion";
+    ViewData["Title"] = "Inscription";
 }
 
-<h1>Connexion</h1>
+<h1>Create</h1>
 
 <h4>User</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Connexion">
+        <form asp-action="Inscription">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
@@ -23,15 +28,16 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Connexion" class="btn btn-primary" />
+                <input type="submit" value="Inscription" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
