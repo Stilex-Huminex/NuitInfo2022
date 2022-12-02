@@ -17,7 +17,7 @@ namespace NuitInfo2022.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Sources()
         {
             return View();
         }
