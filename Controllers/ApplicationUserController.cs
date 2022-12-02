@@ -23,7 +23,11 @@ namespace NuitInfo2022.Controllers
         // GET: ApplicationUser
         public async Task<IActionResult> Index()
         {
-              return View(await _context.ApplicationUsers.ToListAsync());
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
+            return View(await _context.ApplicationUsers.ToListAsync());
         }
 
         // GET: ApplicationUser/Connexion
@@ -49,6 +53,7 @@ namespace NuitInfo2022.Controllers
             if(user.Password == HashPassword(password))
             {
                 HttpContext.Session.SetString("UserId", user.Id.ToString());
+                HttpContext.Session.SetString("IsAdmin", user.IsAdmin.ToString());
                 ViewBag.Name = user.Name; ViewBag.Email = user.Email;
                 return View("Connected");
 
@@ -111,6 +116,11 @@ namespace NuitInfo2022.Controllers
         // GET: ApplicationUser/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
+
             if (id == null || _context.ApplicationUsers == null)
             {
                 return NotFound();
@@ -129,6 +139,10 @@ namespace NuitInfo2022.Controllers
         // GET: ApplicationUser/Create
         public IActionResult Create()
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
             return View();
         }
 
@@ -140,6 +154,10 @@ namespace NuitInfo2022.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Email,Password,IsAdmin")] ApplicationUser user)
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
             var test = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == user.Email);
             if (test != null)
             {
@@ -179,6 +197,10 @@ namespace NuitInfo2022.Controllers
         // GET: ApplicationUser/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
             if (id == null || _context.ApplicationUsers == null)
             {
                 return NotFound();
@@ -199,10 +221,29 @@ namespace NuitInfo2022.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Email,Password,IsAdmin")] ApplicationUser user)
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
             if (id != user.Id)
             {
                 return NotFound();
             }
+            var test = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Email == user.Email);
+            
+            if(user.Password == null)
+            {
+                user.Password = test.Password;
+            }
+            if(user.Name == null)
+            {
+                user.Password = test.Name;
+            }
+            if (user.Email == null)
+            {
+                user.Password = test.Email;
+            }
+            user.Password = HashPassword(user.Password);
 
             if (ModelState.IsValid)
             {
@@ -230,6 +271,10 @@ namespace NuitInfo2022.Controllers
         // GET: ApplicationUser/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
             if (id == null || _context.ApplicationUsers == null)
             {
                 return NotFound();
@@ -250,6 +295,10 @@ namespace NuitInfo2022.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
+            if (HttpContext.Session.GetString("IsAdmin") != "True")
+            {
+                return NotFound();
+            }
             if (_context.ApplicationUsers == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.User'  is null.");
