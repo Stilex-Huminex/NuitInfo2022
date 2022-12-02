@@ -1,0 +1,11 @@
+﻿@model ICollection<UserMessageModel>
+
+@foreach (var message in Model)
+{
+	<div>
+		<p>
+			@message.Message
+		</p>
+	</div>
+}
+@Html.ActionLink("Envoyer un message", "Create", "UserMessage")

@@ -14,6 +14,8 @@ namespace NuitInfo2022.Models.Entities
         public string Password { get; set; }
         public bool IsAdmin { get; set; }
 
+        public string PublicCypherKey { get; set; }
+
         public List<UserMessageModel> Messages { get; set; } = new List<UserMessageModel>();
     }
 }

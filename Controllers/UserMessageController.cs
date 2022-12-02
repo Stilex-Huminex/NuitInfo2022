@@ -16,7 +16,7 @@ namespace NuitInfo2022.Controllers
         // GET: UserMessageController
         public ActionResult Index()
         {
-            return View();
+            return View(_context.UserMessages.ToArray());
         }
 
         // GET: UserMessageController/Create
@@ -41,6 +41,8 @@ namespace NuitInfo2022.Controllers
                     UpdatedAt = DateTime.Now,
                     UserId = GetCurrentUser().Id
                 };
+                _context.UserMessages.Add(newMessage);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
