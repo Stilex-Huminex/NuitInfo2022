@@ -14,6 +14,7 @@ using NuitInfo2022.Models.Entities;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.SignalR;
 
 namespace NuitInfo2022.Controllers
 {
@@ -119,6 +120,23 @@ namespace NuitInfo2022.Controllers
         public IActionResult Inscription()
         {
             return View();
+        }
+
+        // GET: ApplicationUser/Information
+        public async Task<IActionResult> Information()
+        {
+            var UserId = HttpContext.Session.GetString("UserId");
+            var user = await _context.ApplicationUsers.FirstOrDefaultAsync(m => m.Id.ToString() == UserId);
+            return View(user);
+        }
+
+        public IActionResult Deconnexion()
+        {
+            HttpContext.Session.Remove("UserId");
+            HttpContext.Session.Remove("UserName");
+            HttpContext.Session.Remove("IsAdmin");
+            return View("Connexion");
+
         }
 
 
