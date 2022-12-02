@@ -97,15 +97,17 @@ namespace NuitInfo2022.Controllers
                 ViewBag.Invalid_Email = "Email Invalide";
                 return View("Inscription");
             }
-            Match match = Regex.Match(user.Password, "^(?=.*?[A - Z])(?=.*?[a - z])(?=.*?[0 - 9])(?=.*?[#?!@$ %^&*-]).{8,}$", RegexOptions.IgnoreCase);
-            if (!match.Success)
+            //string pattern = @"^(?=.*[AZ].*[AZ])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[az].*[az].*[az]).{.8}";
+            //Match match = Regex.Match(user.Password,pattern );
+            if (user.Password.Length < 8)
             {
-                ViewBag.Invalid_Password = "size > 8, Majuscule >= 1, Number >= 1, Special caracter >= 1";
+                ViewBag.Invalid_Password = "size > 8";
                 return View("Inscription");
             }
             user.Password = HashPassword(user.Password);
             if (ModelState.IsValid)
             {
+                ViewBag.Name = user.Name;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 
@@ -207,7 +209,7 @@ namespace NuitInfo2022.Controllers
 
             // Generate a 128-bit salt using a sequence of
             // cryptographically strong random bytes.
-            byte[] salt = {0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1}; // divide by 8 to convert bits to bytes
+            byte[] salt = {0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1}; 
             Console.WriteLine($"Salt: {Convert.ToBase64String(salt)}");
 
             // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
