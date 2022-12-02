@@ -2,38 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuitInfo2022;
+using NuitInfo2022.Controllers.Shared;
 using NuitInfo2022.Models;
+using NuitInfo2022.Models.Entities;
 
 namespace NuitInfo2022.Controllers
 {
-    public class UsersController : Controller
+    public class ApplicationUserController : RootController
     {
-        private readonly ApplicationDbContext _context;
-
-        public UsersController(ApplicationDbContext context)
+        public ApplicationUserController(ILogger<RootController> logger, ApplicationDbContext context) : base(logger, context)
         {
-            _context = context;
         }
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
-              return View(await _context.User.ToListAsync());
+              return View(await _context.ApplicationUsers.ToListAsync());
         }
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.User == null)
+            if (id == null || _context.ApplicationUsers == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.User
+            var user = await _context.ApplicationUsers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
@@ -54,7 +54,7 @@ namespace NuitInfo2022.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Email,Password,IsAdmin")] User user)
+        public async Task<IActionResult> Create([Bind("Id,Name,Email,Password,IsAdmin")] ApplicationUser user)
         {
             if (ModelState.IsValid)
             {
@@ -68,12 +68,12 @@ namespace NuitInfo2022.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.User == null)
+            if (id == null || _context.ApplicationUsers == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.User.FindAsync(id);
+            var user = await _context.ApplicationUsers.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace NuitInfo2022.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Email,Password,IsAdmin")] User user)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Email,Password,IsAdmin")] ApplicationUser user)
         {
             if (id != user.Id)
             {
@@ -119,12 +119,12 @@ namespace NuitInfo2022.Controllers
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.User == null)
+            if (id == null || _context.ApplicationUsers == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.User
+            var user = await _context.ApplicationUsers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
@@ -139,14 +139,14 @@ namespace NuitInfo2022.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.User == null)
+            if (_context.ApplicationUsers == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.User'  is null.");
             }
-            var user = await _context.User.FindAsync(id);
+            var user = await _context.ApplicationUsers.FindAsync(id);
             if (user != null)
             {
-                _context.User.Remove(user);
+                _context.ApplicationUsers.Remove(user);
             }
             
             await _context.SaveChangesAsync();
@@ -155,7 +155,7 @@ namespace NuitInfo2022.Controllers
 
         private bool UserExists(Guid id)
         {
-          return _context.User.Any(e => e.Id == id);
+          return _context.ApplicationUsers.Any(e => e.Id == id);
         }
     }
 }

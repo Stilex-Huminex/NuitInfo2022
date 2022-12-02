@@ -1,11 +1,12 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using NuitInfo2022;
+using NuitInfo2022.Models.Entities;
 using System.IO;
 using System.Net.Sockets;
 
-#nullable disable
 internal class Program
 {
     private static void Main(string[] args)

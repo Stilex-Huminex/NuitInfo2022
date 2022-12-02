@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-#nullable disable
-namespace NuitInfo2022.Models
+namespace NuitInfo2022.Models.Entities
 {
-    public class User
+    public class ApplicationUser
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -12,7 +12,8 @@ namespace NuitInfo2022.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public int IsAdmin { get; set; }
+        public bool IsAdmin { get; set; }
 
+        public List<UserMessageModel> Messages { get; set; } = new List<UserMessageModel>();
     }
 }
